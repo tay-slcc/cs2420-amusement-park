@@ -14,7 +14,7 @@ import edu.princeton.cs.algs4.StdDraw;
 public class Main {
     public static void main(String[] args) {
     	String file = "resources/parkMap.txt";
-		ParkMap park = new ParkMap(file,",");
+    	ParkMap park = new ParkMap(file,",");
         RoutePlanner planner = new RoutePlanner(park);
         
         AmusementParkUI ui = new AmusementParkUI(park, planner);

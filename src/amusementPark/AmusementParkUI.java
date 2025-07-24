@@ -77,6 +77,7 @@ public class AmusementParkUI {
             double distance = Math.sqrt(dx * dx + dy * dy);
             
             if (distance < RADIUS) {
+            	selectedRide = ride;
                 ST<String, Double> totalTimes = planner.getTotalTimes(ride.getName());
 
                 //sort all rides by total time

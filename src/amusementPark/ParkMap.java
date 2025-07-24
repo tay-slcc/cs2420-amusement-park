@@ -15,12 +15,12 @@ import edu.princeton.cs.algs4.Edge;
  */
 public class ParkMap {
     ST<String, Integer> rNames;
-    private ST<Ride, Integer> rideToIndex = new ST<>(); 
-    ST<Integer, Ride> indexToRide = new ST<>(); 
+    private ST<Ride, Integer> rideToIndex = new ST<>();
+    ST<Integer, Ride> indexToRide = new ST<>();
     private String[] keys;           // index  -> string          
     private EdgeWeightedGraph graph; // the underlying graph
     private ST<String, Double> rideWait = new ST<>();
-    
+
     /**
      * Initializes the ride map from file using the specified delimiter.
      * Each line in the file contains
@@ -30,38 +30,37 @@ public class ParkMap {
      * @param delimiter the delimiter between fields
      */
     public ParkMap(String file, String delimiter) {
-    	rideToIndex = new ST<Ride, Integer>();
-    	rNames = new ST<String, Integer>();
-    	// associates ride names to index
+        rideToIndex = new ST<Ride, Integer>();
+        rNames = new ST<String, Integer>();
+
+        // associates ride names to index
         In in = new In(file);
         while (!in.isEmpty()) {
-        	String[] r = in.readLine().split(delimiter);
-        	for (int i = 0; i < r.length; i++) {
-        		String name = r[0];
-        		int waitTime = Integer.parseInt(r[1]);
-        		double x = Double.parseDouble(r[2]);
-        		double y = Double.parseDouble(r[3]);
-        		Ride ride = new Ride(name, waitTime, x, y);
-        		 if (!rideToIndex.contains(ride)) {
-        			 int index = rideToIndex.size();
-        			 rideToIndex.put(ride, index);
-        			 indexToRide.put(index, ride);
-        			 rNames.put(name, rNames.size());
-        			 //rideWait.put(name, waitTime);
-        		 }
-        		
-                }
+            String[] r = in.readLine().split(delimiter);
+            String name = r[0];
+            int waitTime = Integer.parseInt(r[1]);
+            double x = Double.parseDouble(r[2]);
+            double y = Double.parseDouble(r[3]);
+            Ride ride = new Ride(name, waitTime, x, y);
+
+            if (!rideToIndex.contains(ride)) {
+                int index = rideToIndex.size();
+                rideToIndex.put(ride, index);
+                indexToRide.put(index, ride);
+                rNames.put(name, rNames.size());
+                //rideWait.put(name, waitTime);
             }
-        
+        }
+
         // inverted index to get string keys in an array
         keys = new String[rNames.size()];
         for (String name : rNames.keys()) {
             keys[rNames.get(name)] = name;
-    
         }
+
         System.out.println();
-    	
-        //builds the graph by connecting vertices with weighted edges
+
+        // builds the graph by connecting vertices with weighted edges
         graph = new EdgeWeightedGraph(rNames.size());
         in = new In(file);
         while (in.hasNextLine()) {
@@ -72,7 +71,6 @@ public class ParkMap {
             Edge e = new Edge(v, w, d);
             graph.addEdge(e);            
         }
-
     }
 
     /**
@@ -81,8 +79,8 @@ public class ParkMap {
      * @return Ride
      */
     public Ride getRide(String name) { 
-    	return indexToRide.get(rNames.get(name));
-   }
+        return indexToRide.get(rNames.get(name));
+    }
 
     /**
      * Returns an iterable collection of all rides in the park.
@@ -94,32 +92,30 @@ public class ParkMap {
     public Iterable<Ride> getAllRides() {
         return rideToIndex.keys();
     }
-	 
+
     /**
      * Returns the index based on the ride name provided.
      * @param rideName
      * @return Ride Index
      */
     public int getIndex(String rideName) { 
-    	return rNames.get(rideName); 
-	}
-    
+        return rNames.get(rideName); 
+    }
+
     /**
      * Returns the ride name based on index provided.
      * @param index
      * @return Ride name
      */
     public String getRideName(int index) { 
-    	return indexToRide.get(index).getName();
-	}
-    
+        return indexToRide.get(index).getName();
+    }
+
     /**
      * Returns the graph associated with the park map.
      * @return graph
      */
     public EdgeWeightedGraph getGraph() { 
-    	return graph; 
-	}
-  
-    
+        return graph; 
+    }
 }
