@@ -1,9 +1,14 @@
 package amusementPark;
-
-public class Ride {
+/**
+ * 
+ * Stores a ride object by name, wait time, and x and y coordinates. 
+ * 
+ * @author Chantay Riggs & Raquel Montoya
+ */
+public class Ride implements Comparable<Ride>{
     private String name;
-    private int waitTime;
-    private double x, y;
+    private Integer waitTime;
+    private Double x, y;
 
     public Ride(String name, int waitTime, double x, double y) {
         this.name = name;
@@ -21,10 +26,31 @@ public class Ride {
     public void setWaitTime(int waitTime) { 
     	this.waitTime = waitTime; 
 	}
-    public double getX() { 
+    public Double getX() { 
     	return x; 
 	}
-    public double getY() { 
+    public Double getY() { 
     	return y; 
 	}
+    
+    public Ride getRide() { 
+    	return this; 
+	}
+
+	@Override
+	public int compareTo(Ride o) {
+        int cmp = this.waitTime.compareTo(o.waitTime);
+        if (cmp != 0) return cmp;
+
+        cmp = this.y.compareTo(o.y);
+        if (cmp != 0) return cmp;
+
+        cmp = this.x.compareTo(o.x);
+        if (cmp != 0) return cmp;
+
+        return this.name.compareTo(o.name);
+
+	}
+    
+    
 }
