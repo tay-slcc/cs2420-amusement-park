@@ -1,12 +1,13 @@
 package amusementPark;
 
-import java.util.Map;
-
+import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.ST;
 import edu.princeton.cs.algs4.StdDraw;
 
 public class AmusementParkUI {
     private ParkMap map;
     private RoutePlanner planner;
+    private Ride selectedRide = null;
 
     public AmusementParkUI(ParkMap map, RoutePlanner planner) {
         this.map = map;
@@ -14,20 +15,55 @@ public class AmusementParkUI {
     }
 
     public void drawMap() {
-        // loop through all rides in the park
-            // draw a circle at each ride's (x, y) coordinate
-            // draw the ride's name slightly above the circle
+        for (Ride ride : map.getAllRides()) {
+            double x = ride.getX();
+            double y = ride.getY();
+
+            if (ride == selectedRide) {
+                StdDraw.setPenColor(StdDraw.RED);
+                StdDraw.filledCircle(x, y, 0.015);
+            } else {
+                StdDraw.setPenColor(StdDraw.BLUE);
+                StdDraw.filledCircle(x, y, 0.01);
+            }
+
+            StdDraw.setPenColor(StdDraw.BLACK);
+            StdDraw.text(x, y + 0.02, ride.getName());
+        }
     }
 
-
     public void handleClick(double x, double y) {
-        // loop through all rides to check if the click is near any ride's coordinates
-            // claculate the distance between the click and the ride
-            // if the click is within a small radius of the ride:
-                // print or store the selected ride's name
-                // call RoutePlanner to get total times from this ride
-                // sort the results by total time
-                // display the sorted ride names and total times
+        final double RADIUS = 0.02;
+
+        for (Ride ride : map.getAllRides()) {
+            double dx = x - ride.getX();
+            double dy = y - ride.getY();
+            double distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < RADIUS) {
+                ST<String, Double> totalTimes = planner.getTotalTimes(ride.getName());
+
+                //sort all rides by total time
+                MinPQ<String> pq = new MinPQ<>((s1, s2) -> {
+                    double t1 = totalTimes.get(s1);
+                    double t2 = totalTimes.get(s2);
+                    return Double.compare(t1, t2);
+                });
+
+                for (String name : totalTimes.keys()) {
+                    pq.insert(name);
+                }
+
+                System.out.println("\nRides from " + ride.getName() + " (sorted by total time):");
+                while (!pq.isEmpty()) {
+                    String name = pq.delMin();
+                    double time = totalTimes.get(name);
+                    System.out.printf("%s: %.2f mins\n", name, time);
+                }
+
+                break;
+            }
+        }
     }
 
 }
