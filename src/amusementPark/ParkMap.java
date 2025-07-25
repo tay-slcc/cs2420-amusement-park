@@ -23,32 +23,35 @@ public class ParkMap {
 
     /**
      * Initializes the ride map from file using the specified delimiter.
-     * Each line in the file contains
-     * the name of a vertex, followed by an adjacent vertex, 
+     * Each line in the file contains the name of a vertex, followed by an adjacent vertex, 
      * and the weight of the edge, separated by the delimiter.
-     * @param filename the name of the file
+     * 
+     * @param file the name of the file
      * @param delimiter the delimiter between fields
      */
     public ParkMap(String file, String delimiter) {
-        rideToIndex = new ST<Ride, Integer>();
-        rNames = new ST<String, Integer>();
+        rideToIndex = new ST<>();
+        rNames = new ST<>();
 
         // associates ride names to index
         In in = new In(file);
         while (!in.isEmpty()) {
             String[] r = in.readLine().split(delimiter);
+            if (r.length < 5) continue;
+
             String name = r[0];
             int waitTime = Integer.parseInt(r[1]);
             double x = Double.parseDouble(r[2]);
             double y = Double.parseDouble(r[3]);
-            Ride ride = new Ride(name, waitTime, x, y);
+            String iconPath = "resources/" + r[4];
+
+            Ride ride = new Ride(name, waitTime, x, y, iconPath);
 
             if (!rideToIndex.contains(ride)) {
                 int index = rideToIndex.size();
                 rideToIndex.put(ride, index);
                 indexToRide.put(index, ride);
-                rNames.put(name, rNames.size());
-                //rideWait.put(name, waitTime);
+                rNames.put(name, index);
             }
         }
 
@@ -58,16 +61,22 @@ public class ParkMap {
             keys[rNames.get(name)] = name;
         }
 
-        System.out.println();
-
         // builds the graph by connecting vertices with weighted edges
         graph = new EdgeWeightedGraph(rNames.size());
         in = new In(file);
         while (in.hasNextLine()) {
             String[] dist = in.readLine().split(delimiter);
-            int v = rNames.get(dist[0]); //gets first column vertex
-            int w = rNames.get(dist[4]); //gets connected vertex column
-            double d = Double.parseDouble(dist[5]);
+            if (dist.length < 7) continue;
+
+            Integer v = rNames.get(dist[0]);
+            Integer w = rNames.get(dist[5]);
+            double d = Double.parseDouble(dist[6]);
+
+            if (v == null || w == null) {
+                System.err.println("Missing ride name mapping: " + dist[0] + " or " + dist[5]);
+                continue;
+            }
+
             Edge e = new Edge(v, w, d);
             graph.addEdge(e);            
         }
@@ -75,8 +84,6 @@ public class ParkMap {
 
     /**
      * Returns ride object based on ride name provided.
-     * @param name
-     * @return Ride
      */
     public Ride getRide(String name) { 
         return indexToRide.get(rNames.get(name));
@@ -84,10 +91,6 @@ public class ParkMap {
 
     /**
      * Returns an iterable collection of all rides in the park.
-     * This allows external classes, such as the UI, to loop through
-     * and access each Ride object currently stored in the map.
-     *
-     * @return an Iterable of Ride objects representing all rides in the park
      */
     public Iterable<Ride> getAllRides() {
         return rideToIndex.keys();
@@ -95,8 +98,6 @@ public class ParkMap {
 
     /**
      * Returns the index based on the ride name provided.
-     * @param rideName
-     * @return Ride Index
      */
     public int getIndex(String rideName) { 
         return rNames.get(rideName); 
@@ -104,8 +105,6 @@ public class ParkMap {
 
     /**
      * Returns the ride name based on index provided.
-     * @param index
-     * @return Ride name
      */
     public String getRideName(int index) { 
         return indexToRide.get(index).getName();
@@ -113,7 +112,6 @@ public class ParkMap {
 
     /**
      * Returns the graph associated with the park map.
-     * @return graph
      */
     public EdgeWeightedGraph getGraph() { 
         return graph; 

@@ -45,10 +45,12 @@ public class AmusementParkUI {
      * its name and total time from the selected ride, if available.
      */
     public void drawMap() {
+    	
+    	String font = "Comic Sans MS";
     	StdDraw.picture(0.5, 0.5, "resources/background_faint.png", 1.0, 1.0);
-    	Font regular = new Font("SansSerif", Font.PLAIN, 14);
-    	Font bold = new Font("SansSerif", Font.BOLD, 11);
-    	Font boldTitle = new Font("SansSerif", Font.BOLD, 14);
+    	Font regular = new Font(font, Font.PLAIN, 14);
+    	Font bold = new Font(font, Font.BOLD, 11);
+    	Font boldTitle = new Font(font, Font.BOLD, 14);
     	
     	Color darkRed = new Color(178, 34, 34);      
     	Color mutedBlue = new Color(70, 130, 180);   
@@ -56,9 +58,9 @@ public class AmusementParkUI {
     	Color darkGray = new Color(50, 50, 50);      
     	
     	// title 
-        StdDraw.setFont(new Font("SansSerif", Font.BOLD, 25));
+        StdDraw.setFont(new Font(font, Font.BOLD, 28));
         StdDraw.setPenColor(darkGray);
-        StdDraw.text(0.5, 0.96, "Amusement Park Map");
+        StdDraw.text(0.5, 0.95, "Amusement Park Guide");
 
         StdDraw.setFont(regular);
     	
@@ -70,15 +72,15 @@ public class AmusementParkUI {
             // Ride label dot
             if (ride == selectedRide) {
                 StdDraw.setPenColor(darkRed);
-                drawRideIcon(name, x, y);
+                drawRideIcon(ride);
                 StdDraw.setPenColor(darkRed);
                 StdDraw.circle(x, y, 0.08);
             } else if (topRides.contains(name)) {
                 StdDraw.setPenColor(softGreen);
-                drawRideIcon(name, x, y);
+                drawRideIcon(ride);
             } else {
                 StdDraw.setPenColor(mutedBlue);
-                drawRideIcon(name, x, y);
+                drawRideIcon(ride);
             }
 
             // Label
@@ -87,13 +89,13 @@ public class AmusementParkUI {
                 double time = currentTimes.get(name);
 
                 StdDraw.setFont(regular);
-                StdDraw.text(x, y + 0.036, name);
+                StdDraw.text(x, y + 0.04, name);
 
                 StdDraw.setFont(bold);
                 if (topRides.contains(name)) {
                 	StdDraw.setPenColor(softGreen);
                 }
-                StdDraw.text(x, y + 0.021, String.format("(%d min)", Math.round(time)));
+                StdDraw.text(x, y + 0.023, String.format("(%d min)", Math.round(time)));
             } else {
             	if (selectedRide != null) {
             		StdDraw.setFont(boldTitle);
@@ -152,27 +154,9 @@ public class AmusementParkUI {
         }
     }
     
-    private void drawRideIcon(String rideName, double x, double y) {
-        String icon = getIconForRide(rideName);
-        StdDraw.picture(x, y, icon, 0.06, 0.06);
-    }
-    
-    private String getIconForRide(String rideName) {
-        rideName = rideName.toLowerCase();
-
-        if (rideName.contains("carousel")) return "resources/carousel-Photoroom.png";
-        if (rideName.contains("sky") || rideName.contains("treetop")) return "resources/coaster-Photoroom.png";
-        if (rideName.contains("cyclone")) return "resources/ferris-Photoroom.png";
-        if (rideName.contains("starlight")) return "resources/tower-Photoroom.png";
-        if (rideName.contains("inferno")) return "resources/rocket-Photoroom.png";
-        if (rideName.contains("hollow") || rideName.contains("pharaoh")) return "resources/mine-Photoroom.png";
-        if (rideName.contains("apex") || rideName.contains("whispering") || rideName.contains("bounce")) return "resources/pendulum-Photoroom.png";
-        if (rideName.contains("giggly") || rideName.contains("vortex")) return "resources/water-Photoroom.png";
-        if (rideName.contains("mine") || rideName.contains("ghostlight")) return "resources/mine-Photoroom.png";
-        if (rideName.contains("log") || rideName.contains("splash")) return "resources/water-Photoroom.png";
-        if (rideName.contains("rocket") || rideName.contains("time")) return "resources/rocket-Photoroom.png";
-
-        return "resources/coaster-Photoroom.png"; // default fallback
+    private void drawRideIcon(Ride ride) {
+    	String icon = ride.getIconPath();
+        StdDraw.picture(ride.getX(), ride.getY(), icon, 0.06, 0.06);
     }
 
 
