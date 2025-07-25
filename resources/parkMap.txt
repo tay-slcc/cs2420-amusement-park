@@ -3,8 +3,8 @@ Mystic Mine,5,0.20,0.65,Starlight Skylift,6
 Cyclone,8,0.30,0.85,Vortex X,5
 Bubble Bounce,3,0.40,0.60,Honeybee Carousel,6
 Bubble Bounce,3,0.40,0.60,Vortex X,3
-Inferno Loop,7,0.50,0.90,Drop Zone,3
-Inferno Loop,7,0.50,0.90,Ghostlight Express,4
+Inferno Loop,7,0.50,0.70,Drop Zone,3
+Inferno Loop,7,0.50,0.70,Ghostlight Express,4
 Ghostlight Express,4,0.15,0.40,Mystic Mine,4
 Pharaoh’s Curse,6,0.25,0.30,Log Flume,7
 Log Flume,9,0.35,0.45,Bubble Bounce,4
@@ -16,17 +16,17 @@ Giggly Galaxy,2,0.85,0.55,Cyclone,4
 Vortex X,10,0.70,0.35,Time Twister,6
 Vortex X,10,0.70,0.35,Apex Accelerator,2
 Apex Accelerator,6,0.60,0.20,Inferno Loop,4
-Whispering Woods,5,0.50,0.10,Dragon’s Hollow,5
+Whispering Woods,5,0.75,0.05,Dragon’s Hollow,5
 Splash Sprout,4,0.40,0.15,Starlight Skylift,6
-Honeybee Carousel,3,0.30,0.10,Splash Sprout,3
+Honeybee Carousel,3,0.30,0.06,Splash Sprout,3
 Jellybean Jet,2,0.20,0.15,Ghostlight Express,5
-Starlight Skylift,5,0.10,0.25,Jellybean Jet,4
+Starlight Skylift,5,0.13,0.25,Jellybean Jet,4
 Sky Slicer,10,0.10,0.80,Mystic Mine,6
 Drop Zone,7,0.55,0.40,Inferno Loop,4
 Jellybean Jet,2,0.20,0.15,Log Flume,5
-Honeybee Carousel,3,0.30,0.10,Ghostlight Express,3
+Honeybee Carousel,3,0.30,0.06,Ghostlight Express,3
 Time Twister,4,0.45,0.25,Apex Accelerator,5
-Whispering Woods,5,0.50,0.10,Treetop Trek,6
+Whispering Woods,5,0.75,0.05,Treetop Trek,6
 Bubble Bounce,3,0.40,0.60,Pharaoh’s Curse,5
 Vortex X,10,0.70,0.35,Dragon’s Hollow,7
 Giggly Galaxy,2,0.85,0.55,Drop Zone,4

@@ -1,6 +1,10 @@
 package amusementPark;
 
+import java.awt.Color;
+import java.awt.Font;
+
 import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.SET;
 import edu.princeton.cs.algs4.ST;
 import edu.princeton.cs.algs4.StdDraw;
 
@@ -11,11 +15,15 @@ import edu.princeton.cs.algs4.StdDraw;
  * When a ride is clicked, it calculates the total time (walk + wait)
  * from that ride to all others and then updates each ride's label to show the total time,
  * and highlights the five rides with the shortest total times.
+ * 
+ * @author Chantay Riggs & Raquel Montoya
  */
 public class AmusementParkUI {
     private ParkMap map;
     private RoutePlanner planner;
     private Ride selectedRide = null;
+    private ST<String, Double> currentTimes = new ST<>();
+    private SET<String> topRides = new SET<>();
 
     /**
      * Constructs a UI controller for the amusement park map.
@@ -37,31 +45,68 @@ public class AmusementParkUI {
      * its name and total time from the selected ride, if available.
      */
     public void drawMap() {
+    	Font regular = new Font("SansSerif", Font.PLAIN, 14);
+    	Font bold = new Font("SansSerif", Font.BOLD, 11);
+    	Font boldTitle = new Font("SansSerif", Font.BOLD, 14);
+    	
+    	Color darkRed = new Color(178, 34, 34);      
+    	Color mutedBlue = new Color(70, 130, 180);   
+    	Color softGreen = new Color(60, 179, 113);   
+    	Color darkGray = new Color(50, 50, 50);      
+    	
+    	// title 
+        StdDraw.setFont(new Font("SansSerif", Font.BOLD, 25));
+        StdDraw.setPenColor(darkGray);
+        StdDraw.text(0.5, 0.97, "Amusement Park Map");
+
+        StdDraw.setFont(regular);
+    	
         for (Ride ride : map.getAllRides()) {
             double x = ride.getX();
             double y = ride.getY();
             String name = ride.getName();
 
-            // TODO: highlight top 5 rides
-
+            // Ride label dot
             if (ride == selectedRide) {
-                StdDraw.setPenColor(StdDraw.RED);
-                StdDraw.filledCircle(x, y, 0.015);
+                StdDraw.setPenColor(darkRed);
+                StdDraw.filledCircle(x, y, 0.01);
+                StdDraw.setPenColor(darkRed);
+                StdDraw.circle(x, y + 0.02, 0.07);
+            } else if (topRides.contains(name)) {
+                StdDraw.setPenColor(softGreen);
+                StdDraw.filledCircle(x, y, 0.01);
             } else {
-                StdDraw.setPenColor(StdDraw.BLUE);
+                StdDraw.setPenColor(mutedBlue);
                 StdDraw.filledCircle(x, y, 0.01);
             }
 
-            StdDraw.setPenColor(StdDraw.BLACK);
-            StdDraw.text(x, y + 0.02, name);
-            // TODO: include time in label
+            // Label
+            StdDraw.setPenColor(darkGray);
+            if (currentTimes.contains(name)) {
+                double time = currentTimes.get(name);
+
+                StdDraw.setFont(regular);
+                StdDraw.text(x, y + 0.038, name);
+
+                StdDraw.setFont(bold);
+                if (topRides.contains(name)) {
+                	StdDraw.setPenColor(softGreen);
+                }
+                StdDraw.text(x, y + 0.021, String.format("(%d min)", Math.round(time)));
+            } else {
+            	if (selectedRide != null) {
+            		StdDraw.setFont(boldTitle);
+                    StdDraw.setPenColor(darkRed);
+            	}
+                StdDraw.text(x, y + 0.03, name);
+            }
         }
     }
 
     /**
      * Handles mouse click.
      * 
-     * If the click occurs near a ride, program calculates the total time
+     * If the click occurs near a ride, program finds the total time
      * (walk + wait) from that ride to all others, updates the labels to display
      * these times, and highlights the five rides with the shortest total times.
      *
@@ -75,29 +120,26 @@ public class AmusementParkUI {
             double dx = x - ride.getX();
             double dy = y - ride.getY();
             double distance = Math.sqrt(dx * dx + dy * dy);
-            
-            if (distance < RADIUS) {
-            	selectedRide = ride;
-                ST<String, Double> totalTimes = planner.getTotalTimes(ride.getName());
 
-                //sort all rides by total time
+            if (distance < RADIUS) {
+                selectedRide = ride;
+                currentTimes = planner.getTotalTimes(ride.getName());
+
                 MinPQ<String> pq = new MinPQ<>((s1, s2) -> {
-                    double t1 = totalTimes.get(s1);
-                    double t2 = totalTimes.get(s2);
+                    double t1 = currentTimes.get(s1);
+                    double t2 = currentTimes.get(s2);
                     return Double.compare(t1, t2);
                 });
 
-                for (String name : totalTimes.keys()) {
+                for (String name : currentTimes.keys()) {
                     pq.insert(name);
                 }
-                
-                // TODO: instead of printing, display all times visually
 
-                System.out.println("\nRides from " + ride.getName() + " (sorted by total time):");
-                while (!pq.isEmpty()) {
-                    String name = pq.delMin();
-                    double time = totalTimes.get(name);
-                    System.out.printf("%s: %.2f mins\n", name, time);
+                topRides = new SET<>();
+                int count = 0;
+                while (!pq.isEmpty() && count < 5) {
+                    topRides.add(pq.delMin());
+                    count++;
                 }
 
                 break;
