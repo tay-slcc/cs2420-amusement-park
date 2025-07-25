@@ -45,6 +45,7 @@ public class AmusementParkUI {
      * its name and total time from the selected ride, if available.
      */
     public void drawMap() {
+    	StdDraw.picture(0.5, 0.5, "resources/background_faint.png", 1.0, 1.0);
     	Font regular = new Font("SansSerif", Font.PLAIN, 14);
     	Font bold = new Font("SansSerif", Font.BOLD, 11);
     	Font boldTitle = new Font("SansSerif", Font.BOLD, 14);
@@ -57,7 +58,7 @@ public class AmusementParkUI {
     	// title 
         StdDraw.setFont(new Font("SansSerif", Font.BOLD, 25));
         StdDraw.setPenColor(darkGray);
-        StdDraw.text(0.5, 0.97, "Amusement Park Map");
+        StdDraw.text(0.5, 0.96, "Amusement Park Map");
 
         StdDraw.setFont(regular);
     	
@@ -69,15 +70,15 @@ public class AmusementParkUI {
             // Ride label dot
             if (ride == selectedRide) {
                 StdDraw.setPenColor(darkRed);
-                StdDraw.filledCircle(x, y, 0.01);
+                drawRideIcon(name, x, y);
                 StdDraw.setPenColor(darkRed);
-                StdDraw.circle(x, y + 0.02, 0.07);
+                StdDraw.circle(x, y, 0.08);
             } else if (topRides.contains(name)) {
                 StdDraw.setPenColor(softGreen);
-                StdDraw.filledCircle(x, y, 0.01);
+                drawRideIcon(name, x, y);
             } else {
                 StdDraw.setPenColor(mutedBlue);
-                StdDraw.filledCircle(x, y, 0.01);
+                drawRideIcon(name, x, y);
             }
 
             // Label
@@ -86,7 +87,7 @@ public class AmusementParkUI {
                 double time = currentTimes.get(name);
 
                 StdDraw.setFont(regular);
-                StdDraw.text(x, y + 0.038, name);
+                StdDraw.text(x, y + 0.036, name);
 
                 StdDraw.setFont(bold);
                 if (topRides.contains(name)) {
@@ -98,7 +99,11 @@ public class AmusementParkUI {
             		StdDraw.setFont(boldTitle);
                     StdDraw.setPenColor(darkRed);
             	}
-                StdDraw.text(x, y + 0.03, name);
+                StdDraw.text(x, y + 0.025, name);
+            	if (selectedRide != null) {
+            		StdDraw.setFont(bold);
+                    StdDraw.text(x, y - 0.03, "You are here");
+            	}
             }
         }
     }
@@ -114,7 +119,7 @@ public class AmusementParkUI {
      * @param y the y coordinate of the click
      */
     public void handleClick(double x, double y) {
-        final double RADIUS = 0.02;
+        final double RADIUS = 0.06;
 
         for (Ride ride : map.getAllRides()) {
             double dx = x - ride.getX();
@@ -146,4 +151,29 @@ public class AmusementParkUI {
             }
         }
     }
+    
+    private void drawRideIcon(String rideName, double x, double y) {
+        String icon = getIconForRide(rideName);
+        StdDraw.picture(x, y, icon, 0.06, 0.06);
+    }
+    
+    private String getIconForRide(String rideName) {
+        rideName = rideName.toLowerCase();
+
+        if (rideName.contains("carousel")) return "resources/carousel-Photoroom.png";
+        if (rideName.contains("sky") || rideName.contains("treetop")) return "resources/coaster-Photoroom.png";
+        if (rideName.contains("cyclone")) return "resources/ferris-Photoroom.png";
+        if (rideName.contains("starlight")) return "resources/tower-Photoroom.png";
+        if (rideName.contains("inferno")) return "resources/rocket-Photoroom.png";
+        if (rideName.contains("hollow") || rideName.contains("pharaoh")) return "resources/mine-Photoroom.png";
+        if (rideName.contains("apex") || rideName.contains("whispering") || rideName.contains("bounce")) return "resources/pendulum-Photoroom.png";
+        if (rideName.contains("giggly") || rideName.contains("vortex")) return "resources/water-Photoroom.png";
+        if (rideName.contains("mine") || rideName.contains("ghostlight")) return "resources/mine-Photoroom.png";
+        if (rideName.contains("log") || rideName.contains("splash")) return "resources/water-Photoroom.png";
+        if (rideName.contains("rocket") || rideName.contains("time")) return "resources/rocket-Photoroom.png";
+
+        return "resources/coaster-Photoroom.png"; // default fallback
+    }
+
+
 }

@@ -19,7 +19,7 @@ public class Main {
         
         AmusementParkUI ui = new AmusementParkUI(park, planner);
 
-        StdDraw.setCanvasSize(1000, 1000);
+        StdDraw.setCanvasSize(1024, 1024);
         StdDraw.setXscale(0, 1); 
         StdDraw.setYscale(0, 1);
         StdDraw.enableDoubleBuffering();
